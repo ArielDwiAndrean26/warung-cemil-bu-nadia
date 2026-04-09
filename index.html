@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warung Bu Nadia - Belanja Online</title>
+    <style>
+        /* --- CSS (Desain Tampilan) --- */
+        :root {
+            --primary: #ff6b6b; /* Warna Merah Coral */
+            --secondary: #4ecdc4; /* Warna Hijau Mint */
+            --dark: #2d3436;
+            --light: #f7f1e3;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .cart-btn {
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .cart-count {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; }
+
+        /* Product Grid */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover {
+            background-color: #ff5252;
+        }
+
+        /* Cart Modal (Popup) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-section {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">🍜 Warung Bu Nadia</div>
+        <button class="cart-btn" onclick="toggleCart()">
+            Keranjang 🛒 <span class="cart-count" id="cartCount">0</span>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            <h1>Lezatnya Rumah di Ujung Lidah</h1>
+            <p>Pesan makanan favoritmu sekarang juga!</p>
+        </div>
+    </section>
+
+    <!-- Daftar Produk -->
+    <div class="container">
+        <h2 class="section-title">Menu Unggulan</h2>
+        <div class="product-grid" id="productList">
+            <!-- Produk akan dimuat lewat JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal Keranjang -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleCart()">&times;</span>
+            <h2>Keranjang Belanja</h2>
+            <div class="cart-items" id="cartItems">
+                <p>Keranjang masih kosong.</p>
+            </div>
+            <div class="total-section">
+                Total: Rp <span id="totalPrice">0</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Pesan Sekarang (WhatsApp)</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Warung Bu Nadia &copy; 2023</p>
+        <p>Jl. Merdeka No. 123, Jakarta Selatan</p>
+    </footer>
+
+    <script>
+        /* --- JavaScript (Logika Website) --- */
+
+        // 1. Data Produk
+        const products = [
+            {
+                id: 1,
+                name: "Nasi Goreng Spesial",
+                price: 25000,
+                img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 2,
+                name: "Mie Ayam Bakso",
+                price: 20000,
+                img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 3,
+                name: "Soto Ayam Madura",
+                price: 18000,
+                img: "https://images.unsplash.com/photo-1541529086526-db283c563270?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 4,
+                name: "Es Teh Manis",
+                price: 5000,
+                img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 5,
+                name: "Ayam Goreng Lengkuas",
+                price: 30000,
+                img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 6,
+                name: "Nasi Putih",
+                price: 5000,
+                img: "https://images.unsplash.com/photo-1516684732162-798a0062be99?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            }
+        ];
+
+        // Keranjang Belanja (Array Kosong)
+        let cart = [];
+
+        // 2. Fungsi Menampilkan Produk
+        function renderProducts() {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.img}" alt="${product.name}" class="product-img">
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
+                        <button class="add-btn" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 3. Fungsi Menambah ke Keranjang
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            
+            updateCartUI();
+            alert(`${product.name} ditambahkan ke keranjang!`);
+        }
+
+        // 4. Fungsi Mengupdate Tampilan Keranjang
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const totalPriceEl = document.getElementById('totalPrice');
+
+            // Update Jumlah Icon
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.innerText = totalQty;
+
+            // Update Isi Keranjang
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p>Keranjang masih kosong.</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong> <br>
+                            <small>Rp ${item.price.toLocaleString('id-ID')} x ${item.qty}</small>
+                        </div>
+                        <div>Rp ${(item.price * item.qty).toLocaleString('id-ID')}</div>
+                    </div>
+                `).join('');
+            }
+
+            // Update Total Harga
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            totalPriceEl.innerText = total.toLocaleString('id-ID');
+        }
+
+        // 5. Fungsi Toggle Modal (Buka/Tutup)
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // 6. Fungsi Checkout (Mengirim ke WhatsApp)
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Keranjang masih kosong!");
+                return;
+            }
+
+            let message = "Halo Bu Nadia, saya mau pesan makanan:%0A";
+            let total = 0;
+            
+            cart.forEach(item => {
+                message += `- ${item.name} (x${item.qty}): Rp ${(item.price * item.qty).toLocaleString('id-ID')}%0A`;
+                total += (item.price * item.qty);
+            });
+            
+            message += `%0ATotal: Rp ${total.toLocaleString('id-ID')}`;
+            
+            // Ganti nomor WhatsApp di bawah ini (Gunakan 62 bukan 0)
+            const phoneNumber = "6281234567890"; 
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        }
+
+        // Tutup modal jika klik di luar area modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Jalankan saat halaman dimuat
+        renderProducts();
+    </script>
+</body>
+</html>
