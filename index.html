@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warung Bu Nadia - Belanja Online</title>
+    <title>Warung Cemil Bu Nadia - Belanja Online</title>
+    <link rel="icon" type="image/png" href="Logo Online 2.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="Logo Online 2.png" sizes="180x180">
     <style>
         /* --- CSS (Desain Tampilan) --- */
         :root {
@@ -26,6 +28,109 @@
             color: var(--dark);
         }
 
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 0.8s ease-in-out 2s forwards;
+        }
+
+        .loader {
+            text-align: center;
+        }
+
+        .loader-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--white);
+            margin-bottom: 2rem;
+            animation: slideDown 0.8s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animasi untuk elemen saat dimuat */
+        body.loaded header {
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        body.loaded .hero {
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        body.loaded .container {
+            animation: fadeIn 0.6s ease-out 0.6s both;
+        }
+
+        body.loaded footer {
+            animation: fadeIn 0.6s ease-out 0.8s both;
+        }
+
+        body.loaded .product-card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        body.loaded .product-card:nth-child(1) { animation-delay: 0.7s; }
+        body.loaded .product-card:nth-child(2) { animation-delay: 0.75s; }
+        body.loaded .product-card:nth-child(3) { animation-delay: 0.8s; }
+        body.loaded .product-card:nth-child(4) { animation-delay: 0.85s; }
+        body.loaded .product-card:nth-child(5) { animation-delay: 0.9s; }
+        body.loaded .product-card:nth-child(6) { animation-delay: 0.95s; }
+        body.loaded .product-card:nth-child(7) { animation-delay: 1s; }
+
         /* Header */
         header {
             background-color: var(--white);
@@ -43,6 +148,14 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 90px;
+            width: auto;
+            object-fit: contain;
         }
 
         .cart-btn {
@@ -54,6 +167,11 @@
             cursor: pointer;
             font-weight: bold;
             position: relative;
+            transition: transform 0.3s;
+        }
+
+        .cart-btn:hover {
+            transform: scale(1.05);
         }
 
         .cart-count {
@@ -94,6 +212,34 @@
             text-align: center;
             margin-bottom: 2rem;
             color: var(--dark);
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--secondary);
+            background: var(--white);
+            color: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--secondary);
+            color: var(--white);
         }
 
         .product-grid {
@@ -137,6 +283,42 @@
             margin-bottom: 1rem;
         }
 
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .product-category {
+            background: #eef8f7;
+            color: #2b8f88;
+            border-radius: 12px;
+            padding: 0.2rem 0.6rem;
+            font-weight: 600;
+        }
+
+        .rating {
+            color: #f5a623;
+            font-weight: 600;
+        }
+
+        .variant-select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: var(--white);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
         .add-btn {
             width: 100%;
             padding: 0.8rem;
@@ -151,6 +333,16 @@
 
         .add-btn:hover {
             background-color: #ff5252;
+        }
+
+        .detail-btn {
+            padding: 0.8rem;
+            background-color: #f1f1f1;
+            color: var(--dark);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
         /* Cart Modal (Popup) */
@@ -173,6 +365,18 @@
             width: 90%;
             max-width: 500px;
             position: relative;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .close {
@@ -181,6 +385,11 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: var(--primary);
         }
 
         .cart-items {
@@ -195,6 +404,39 @@
             align-items: center;
             padding: 10px 0;
             border-bottom: 1px solid #eee;
+            gap: 0.8rem;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .qty-btn, .delete-btn {
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.85rem;
+            transition: transform 0.2s;
+        }
+
+        .qty-btn {
+            background: #efefef;
+        }
+
+        .qty-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .delete-btn {
+            background: #ffdede;
+            color: #c0392b;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.1);
         }
 
         .total-section {
@@ -202,6 +444,45 @@
             font-size: 1.2rem;
             font-weight: bold;
             margin-top: 1rem;
+        }
+
+        .note-section {
+            margin-top: 1rem;
+        }
+
+        .note-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .note-section textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .name-section {
+            margin-top: 1rem;
+        }
+
+        .name-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .name-section input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
         }
 
         .checkout-btn {
@@ -213,6 +494,50 @@
             cursor: pointer;
             margin-top: 10px;
             width: 100%;
+            transition: background 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #45b7b1;
+        }
+
+        .review-list {
+            margin: 1rem 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #eee;
+            padding: 0.5rem 0;
+        }
+
+        .comment-form {
+            display: grid;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .comment-form input, .comment-form textarea, .comment-form select {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        .comment-form button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .comment-form button:hover {
+            background-color: #45b7b1;
         }
 
         /* Footer */
@@ -223,13 +548,65 @@
             padding: 2rem;
             margin-top: 3rem;
         }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 72px;
+            height: 72px;
+            padding: 6px;
+            background-color: transparent;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+        }
+
+        .whatsapp-float img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+                width: 62px;
+                height: 62px;
+                padding: 5px;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loader">
+            <div class="loader-text"><img src="Logo Online 2.png" alt="Logo" style="height: 70px; width: auto;"> Warung Cemil Bu Nadia</div>
+            <div class="spinner"></div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
-        <div class="logo">🍜 Warung Bu Nadia</div>
+        <div class="logo">
+            <img src="Logo Online.jpeg" alt="Warung Cemil Bu Nadia Logo" style="height: 110px; width: auto; cursor: pointer;" onclick="scrollToTopAndReload()">
+        </div>
         <button class="cart-btn" onclick="toggleCart()">
             Keranjang 🛒 <span class="cart-count" id="cartCount">0</span>
         </button>
@@ -246,6 +623,7 @@
     <!-- Daftar Produk -->
     <div class="container">
         <h2 class="section-title">Menu Unggulan</h2>
+        <div class="category-filter" id="categoryFilter"></div>
         <div class="product-grid" id="productList">
             <!-- Produk akan dimuat lewat JavaScript -->
         </div>
@@ -262,15 +640,35 @@
             <div class="total-section">
                 Total: Rp <span id="totalPrice">0</span>
             </div>
+            <div class="name-section">
+                <label for="customerName">Nama Pemesan:</label>
+                <input type="text" id="customerName" placeholder="Masukkan nama Anda" required>
+            </div>
+            <div class="note-section">
+                <label for="cartNote">Catatan Tambahan (Untuk Tingkat Kepedasan, dll.):</label>
+                <textarea id="cartNote" placeholder="Tambahkan catatan khusus..."></textarea>
+            </div>
             <button class="checkout-btn" onclick="checkout()">Pesan Sekarang (WhatsApp)</button>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleDetail()">&times;</span>
+            <div id="detailContent"></div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>Warung Bu Nadia &copy; 2023</p>
-        <p>Jl. Merdeka No. 123, Jakarta Selatan</p>
+        <p>Warung Cemil Bu Nadia &copy; 2026</p>
+        <p>Jl. Kesehatan No. 29, Kec. Adiluwih, Kab. Pringsewu</p>
     </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/6285758314957?text=Halo%20Bu%20Nadia" class="whatsapp-float" target="_blank" title="Chat dengan WhatsApp">
+        <img src="whatsapp.jpg" alt="WhatsApp Chat">
+    </a>
 
     <script>
         /* --- JavaScript (Logika Website) --- */
@@ -279,73 +677,240 @@
         const products = [
             {
                 id: 1,
-                name: "Nasi Goreng Spesial",
-                price: 25000,
-                img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                name: "Lumpia Beef",
+                price: 10000,
+                img: "lumpia beef.jpeg",
+                category: "Makanan Berat",
+                description: "Lumpia Beef. Padat isian daging, selada, jagung, makaroni dan saus spesial. Camilan berat yang pas buat nunda lapar!",
+                variants: [
+                    { name: "Beef Biasa", price: 10000 },
+                    { name: "Beef Patty", price: 13000 },
+                    { name: "Chicken Katsu", price: 12000 },
+                    { name: "Sosis", price: 8000 }
+                ],
+                reviews: [
+                    { name: "Rina", stars: 5, comment: "Bumbunya mantap!" },
+                    { name: "Tono", stars: 4, comment: "Porsinya pas." }
+                ]
             },
             {
                 id: 2,
-                name: "Mie Ayam Bakso",
-                price: 20000,
-                img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                name: "Mie Tek-Tek",
+                price: 10000,
+                img: "Mie Tek-tek.jpg",
+                category: "Makanan Berat",
+                description: "Mie yang dimasak dengan bumbu khas dan berisi telur dan sayur didalamnya. Gurih, manis, pedas, hangat. Comfort food sejati!",
+                variants: [
+                    { name: "Goreng", price: 10000 },
+                    { name: "Kuah", price: 10000 }
+                ],
+                reviews: [{ name: "Dodi", stars: 5, comment: "Mie tek-tek gorengnya enak." }]
             },
             {
                 id: 3,
-                name: "Soto Ayam Madura",
-                price: 18000,
-                img: "https://images.unsplash.com/photo-1541529086526-db283c563270?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                name: "Nasi Goreng Telur",
+                price: 10000,
+                img: "Nasi Goreng.jpg",
+                category: "Makanan Berat",
+                description: "Nasi goreng dengan telur dadar atau orak-arik dan bumbu khas!",
+                variants: [
+                    { name: "Telur Dadar", price: 10000 },
+                    { name: "Telur Orak-arik", price: 10000 }
+                ],
+                reviews: [{ name: "Nana", stars: 4, comment: "Bumbunya nampol abiz." }]
             },
             {
                 id: 4,
                 name: "Es Teh Manis",
                 price: 5000,
-                img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                category: "Minuman",
+                description: "Teh manis dingin pelepas dahaga.",
+                variants: [
+                    { name: "Normal", price: 5000 },
+                    { name: "Less Sugar", price: 5000 }
+                ],
+                reviews: [{ name: "Maya", stars: 4, comment: "Segar banget." }]
             },
             {
                 id: 5,
-                name: "Ayam Goreng Lengkuas",
-                price: 30000,
-                img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                name: "Sempol Ayam",
+                price: 1000,
+                img: "Sempol.jpeg",
+                category: "Cemilan",
+                description: "Sempol Ayam (Harga Per-tusuk Seribu Rupiah Seperti yang Tertera). Jajanan legendaris berbahan dasar ayam asli. Rasa dagingnya berasa banget, bukan cuma tepung! Higienis, gurih, dan bikin nagih. Sudah termasuk saus sambal mantap.",
+                variants: [
+                    { name: "Sempol Ayam Biasa", price: 1000 },
+                    { name: "Sempol Tahu", price: 1000 },
+                    { name: "Sempol Pangsit", price: 1000 }
+                ],
+                reviews: [{ name: "Rio", stars: 5, comment: "Gurih, renyah dibagian luar dan chewy di dalam." }]
             },
             {
                 id: 6,
-                name: "Nasi Putih",
+                name: "Mix Platter",
+                price: 10000,
+                img: "Mix Platter.jpeg",
+                category: "Cemilan",
+                description: "Platter Party! (Combo Ngemil). Menu wajib buat nemenin nongkrong! Isian lengkap mulai dari French Fries yang gurih, Sosis yang mantap, dan Otak-Otak favorit sejuta umat. Porsi pas buat sharing bareng teman atau dimakan sendiri sambil santai. Sudah lengkap dengan saus cocolan spesial (Harga sosis dan otak-otak saja = satuan)!",
+                variants: [
+                    { name: "Mix Platter", price: 10000 },
+                    { name: "Kentang Goreng Saja 5K", price: 5000 },
+                    { name: "Kentang Goreng Saja 10K", price: 10000 },
+                    { name: "Sosis Goreng Saja", price: 1000 },
+                    { name: "Otak-otak Goreng Saja", price: 1000 }
+                ],
+                reviews: [{ name: "Asep", stars: 4, comment: "Rekomended banget sih untuk nemenin nyantai sambil nonton." }]
+            },
+            {
+                id: 7,
+                name: "Es Boba",
                 price: 5000,
-                img: "https://images.unsplash.com/photo-1516684732162-798a0062be99?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                img: "Es Boba.jpg",
+                category: "Minuman",
+                description: "Boba Series: Mood Booster in a Cup!. Lagi butuh penyegar pikiran? Cobain seri Boba kita! Tekstur bobanya anti-alot dan punya rasa manis yang meresap sampai ke dalam. Pas banget buat nemenin kamu nugas, kerja, atau sekadar santai di cuaca panas. Warning: bikin ketagihan!",
+                variants: [
+                    { name: "Thai Tea", price: 5000 },
+                    { name: "Red Velvet", price: 5000 },
+                    { name: "Matcha", price: 5000 },
+                    { name: "Taro", price: 5000 },
+                    { name: "Chocolate", price: 5000 },
+                    { name: "Tiramisu", price: 5000 },
+                    { name: "Oreo", price: 5000 }
+                ],
+                reviews: [{ name: "Lia", stars: 5, comment: "Cocok menjadi penyegar di cuaca panas." }]
+            },
+            {
+                id: 8,
+                name: "Es Teh Hijau",
+                price: 5000,
+                img: "Es Teh Hijau.jpg",
+                category: "Minuman",
+                description: "Teh hijau dingin dengan rasa yang menyegarkan. Cocok untuk menemani santai atau makan siangmu!",
+                variants: [
+                    { name: "Normal", price: 5000 },
+                    { name: "Kecil", price: 3000 }
+                ],
+                reviews: [{ name: "Nana", stars: 4, comment: "Buat nemenin santai sih ini cocoknya." }]
+            },
+            {
+                id: 9,
+                name: "Cilor",
+                price: 1000,
+                img: "Cilor.jpg",
+                category: "Cemilan",
+                description: "Cilor (Cilok Telor). Jajanan legendaris berbahan dasar tepung tapioka yang ditusuk dengan tusukan bambu dan dilapisi telur sebelum digoreng. Rasa gurih, krispi di luar dan kenyalnya bikin ketagihan! Cocok banget buat ngemil santai atau sebagai teman nonton. Sudah termasuk saus sambal spesial (Harga Per-tusuk Seribu Rupiah Seperti yang Tertera).",
+                variants: [
+                    { name: "Biasa", price: 1000 }
+                ],
+                reviews: [{ name: "Nana", stars: 4, comment: "Saus sambalnya enak, rasa gurihnya mantap, luarnya krispi tapi dalamnya kenyal." }]
             }
         ];
 
         // Keranjang Belanja (Array Kosong)
         let cart = [];
+        let selectedCategory = "Semua";
+        let activeDetailId = null;
+
+        function getAverageRating(product) {
+            if (!product.reviews.length) return 0;
+            const total = product.reviews.reduce((sum, review) => sum + review.stars, 0);
+            return (total / product.reviews.length).toFixed(1);
+        }
+
+        function renderCategoryFilter() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = ["Semua", ...new Set(products.map(product => product.category))];
+            categoryFilter.innerHTML = categories.map(category => `
+                <button 
+                    class="filter-btn ${selectedCategory === category ? 'active' : ''}" 
+                    onclick="setCategory('${category}')"
+                >
+                    ${category}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(category) {
+            selectedCategory = category;
+            renderCategoryFilter();
+            renderProducts();
+        }
 
         // 2. Fungsi Menampilkan Produk
         function renderProducts() {
             const productList = document.getElementById('productList');
-            productList.innerHTML = products.map(product => `
+            const filteredProducts = selectedCategory === "Semua"
+                ? products
+                : products.filter(product => product.category === selectedCategory);
+
+            productList.innerHTML = filteredProducts.map(product => `
                 <div class="product-card">
                     <img src="${product.img}" alt="${product.name}" class="product-img">
                     <div class="product-info">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">Rp ${product.price.toLocaleString('id-ID')}</div>
-                        <button class="add-btn" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                        <div class="product-meta">
+                            <span class="product-category">${product.category}</span>
+                            <span class="rating">⭐ ${getAverageRating(product)}</span>
+                        </div>
+                        <div class="product-price">Rp ${product.variants[0].price.toLocaleString('id-ID')}</div>
+                        <select id="variant-${product.id}" class="variant-select" onchange="updateVariantPrice(${product.id})">
+                            ${product.variants.map(variant => `
+                                <option value="${variant.name}" data-price="${variant.price}">
+                                    ${variant.name}
+                                </option>
+                            `).join('')}
+                        </select>
+                        <div class="product-actions">
+                            <button class="detail-btn" onclick="showDetail(${product.id})">Detail</button>
+                            <button class="add-btn" onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
+        function updateVariantPrice(id) {
+            const variantEl = document.getElementById(`variant-${id}`);
+            const price = Number(variantEl.selectedOptions[0].dataset.price);
+            const productCard = variantEl.closest('.product-card');
+            productCard.querySelector('.product-price').innerText = `Rp ${price.toLocaleString('id-ID')}`;
+        }
+
         // 3. Fungsi Menambah ke Keranjang
         function addToCart(id) {
             const product = products.find(p => p.id === id);
-            const existingItem = cart.find(item => item.id === id);
+            const variantEl = document.getElementById(`variant-${id}`);
+            const variant = variantEl ? variantEl.value : product.variants[0].name;
+            const selectedPrice = variantEl
+                ? Number(variantEl.selectedOptions[0].dataset.price)
+                : product.variants[0].price;
+
+            const existingItem = cart.find(item => item.id === id && item.variant === variant);
 
             if (existingItem) {
                 existingItem.qty += 1;
             } else {
-                cart.push({ ...product, qty: 1 });
+                cart.push({ ...product, qty: 1, variant, price: selectedPrice });
             }
             
             updateCartUI();
-            alert(`${product.name} ditambahkan ke keranjang!`);
+            alert(`${product.name} (${variant}) ditambahkan ke keranjang!`);
+        }
+
+        function changeQty(id, variant, delta) {
+            const item = cart.find(cartItem => cartItem.id === id && cartItem.variant === variant);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(cartItem => !(cartItem.id === id && cartItem.variant === variant));
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(id, variant) {
+            cart = cart.filter(item => !(item.id === id && item.variant === variant));
+            updateCartUI();
         }
 
         // 4. Fungsi Mengupdate Tampilan Keranjang
@@ -366,9 +931,18 @@
                     <div class="cart-item">
                         <div>
                             <strong>${item.name}</strong> <br>
+                            <small>Varian: ${item.variant}</small><br>
                             <small>Rp ${item.price.toLocaleString('id-ID')} x ${item.qty}</small>
                         </div>
-                        <div>Rp ${(item.price * item.qty).toLocaleString('id-ID')}</div>
+                        <div>
+                            <div>Rp ${(item.price * item.qty).toLocaleString('id-ID')}</div>
+                            <div class="cart-item-actions">
+                                <button class="qty-btn" onclick="changeQty(${item.id}, '${item.variant}', -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty(${item.id}, '${item.variant}', 1)">+</button>
+                                <button class="delete-btn" onclick="removeFromCart(${item.id}, '${item.variant}')">Hapus</button>
+                            </div>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -384,6 +958,60 @@
             modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
         }
 
+        function toggleDetail() {
+            const detailModal = document.getElementById('detailModal');
+            detailModal.style.display = detailModal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showDetail(id) {
+            const product = products.find(p => p.id === id);
+            activeDetailId = id;
+            const detailContent = document.getElementById('detailContent');
+            detailContent.innerHTML = `
+                <h2>${product.name}</h2>
+                <p style="margin: 0.5rem 0;"><strong>Kategori:</strong> ${product.category}</p>
+                <p style="margin: 0.5rem 0;"><strong>Harga:</strong> Rp ${product.price.toLocaleString('id-ID')}</p>
+                <p>${product.description}</p>
+                <h3 style="margin-top: 1rem;">Rating & Komentar (⭐ ${getAverageRating(product)})</h3>
+                <ul class="review-list">
+                    ${product.reviews.map(review => `
+                        <li class="review-item">
+                            <strong>${review.name}</strong> - ${'⭐'.repeat(review.stars)}<br>
+                            <small>${review.comment}</small>
+                        </li>
+                    `).join('')}
+                </ul>
+                <form class="comment-form" onsubmit="submitReview(event)">
+                    <input type="text" id="reviewerName" placeholder="Nama kamu" required>
+                    <select id="reviewStars" required>
+                        <option value="">Pilih rating</option>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                    <textarea id="reviewComment" placeholder="Tulis komentar..." required></textarea>
+                    <button type="submit">Kirim Komentar</button>
+                </form>
+            `;
+            document.getElementById('detailModal').style.display = 'block';
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+            const product = products.find(item => item.id === activeDetailId);
+            const name = document.getElementById('reviewerName').value.trim();
+            const stars = Number(document.getElementById('reviewStars').value);
+            const comment = document.getElementById('reviewComment').value.trim();
+
+            if (!name || !stars || !comment) return;
+
+            product.reviews.push({ name, stars, comment });
+            renderProducts();
+            showDetail(activeDetailId);
+        }
+
         // 6. Fungsi Checkout (Mengirim ke WhatsApp)
         function checkout() {
             if (cart.length === 0) {
@@ -391,31 +1019,76 @@
                 return;
             }
 
-            let message = "Halo Bu Nadia, saya mau pesan makanan:%0A";
+            const name = document.getElementById('customerName').value.trim();
+            if (!name) {
+                alert("Silakan masukkan nama pemesan!");
+                return;
+            }
+
+            let message = `Halo Bu Nadia, saya ${name}, mau pesan makanan:%0A`;
             let total = 0;
             
             cart.forEach(item => {
-                message += `- ${item.name} (x${item.qty}): Rp ${(item.price * item.qty).toLocaleString('id-ID')}%0A`;
+                message += `- ${item.name} [${item.variant}] (x${item.qty}): Rp ${(item.price * item.qty).toLocaleString('id-ID')}%0A`;
                 total += (item.price * item.qty);
             });
             
             message += `%0ATotal: Rp ${total.toLocaleString('id-ID')}`;
             
+            const note = document.getElementById('cartNote').value.trim();
+            if (note) {
+                message += `%0ACatatan: ${note}`;
+            }
+            
             // Ganti nomor WhatsApp di bawah ini (Gunakan 62 bukan 0)
-            const phoneNumber = "6281234567890"; 
+            const phoneNumber = "6285758314957"; 
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+            
+            // Kosongkan keranjang setelah pesanan dikirim
+            cart = [];
+            document.getElementById('customerName').value = '';
+            document.getElementById('cartNote').value = '';
+            updateCartUI();
+            toggleCart();
+            alert("Pesanan berhasil dikirim! Keranjang telah dikosongkan.");
         }
 
         // Tutup modal jika klik di luar area modal
         window.onclick = function(event) {
             const modal = document.getElementById('cartModal');
+            const detailModal = document.getElementById('detailModal');
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+            if (event.target == detailModal) {
+                detailModal.style.display = "none";
+            }
+        }
+
+        // Fungsi untuk scroll ke atas dan reload halaman
+        function scrollToTopAndReload() {
+            // Scroll ke atas secara smooth (halus)
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            
+            // Reload halaman setelah 500ms (agar scroll selesai dulu)
+            setTimeout(function() {
+                location.reload();
+            }, 500);
         }
 
         // Jalankan saat halaman dimuat
-        renderProducts();
+        window.addEventListener('load', function() {
+            renderCategoryFilter();
+            renderProducts();
+            
+            // Aktifkan animasi setelah loading screen selesai
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 2000);
+        });
     </script>
 </body>
 </html>
