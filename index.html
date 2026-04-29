@@ -262,8 +262,10 @@
 
         .product-img {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 220px;
+            object-fit: contain;
+            object-position: center;
+            background: #f7f1e3;
         }
 
         .product-info {
@@ -582,6 +584,11 @@
         }
 
         @media (max-width: 768px) {
+            .product-img {
+                height: auto;
+                max-height: none;
+            }
+
             .whatsapp-float {
                 bottom: 20px;
                 right: 20px;
